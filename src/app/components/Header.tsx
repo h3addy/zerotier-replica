@@ -18,6 +18,7 @@ const Header = () => {
     id: "",
     show: false,
   });
+  const [scrolled, setScrolled] = useState<boolean>(false);
 
   const handleShowSubMenu = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -38,15 +39,39 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const header = document.querySelector(".header__wrapper");
+    const delay = 250;
+    let throttled = false;
+
+    function getScrollY() {
+      console.log(window.scrollY);
+      if (window.scrollY > 100) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    }
+
+    const throttleFn = () => {
+      if (!throttled) {
+        getScrollY();
+        throttled = true;
+        setTimeout(() => {
+          throttled = false;
+        }, delay);
+      }
+    };
+    window.addEventListener("scroll", throttleFn);
+
+    return () => window.removeEventListener("scroll", throttleFn);
   }, []);
 
   return (
     <header className="header__wrapper w-full h-full flex justify-center">
       <nav
-        className={`pt-4 px-4 z-40 lg:h-[5rem] lg:pt-8 lg:max-w-[1280px] lg:m-auto w-full fixed transform transition-all origin-top ease-in-out duration-500 ${
-          showList ? "h-full bg-[#000]" : "h-[5rem]"
-        } lg:flex lg:items-center lg:justify-between`}
+        className={`nav__wrapper pt-4 px-4 z-40 lg:h-[5rem] lg:max-w-[1280px] lg:m-auto w-full fixed transform transition-all origin-top ease-in-out duration-500 ${clsx(
+          showList ? "h-full bg-[#000]" : "bg-inherit h-[5rem]",
+          scrolled && !showList ? "bg-[#1a1a1a] lg:pt-0" : "lg:pt-8 ",
+        )} lg:flex lg:items-center lg:justify-between`}
       >
         <div className="flex justify-between items-center flex-wrap">
           <Link href="/">

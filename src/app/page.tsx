@@ -13,7 +13,7 @@ import Hero from "./components/home/Hero";
 
 export default function Home() {
   return (
-    <main className="bg-bg-primary w-full h-full">
+    <main className="main__wrapper bg-bg-primary w-full h-full">
       <Hero />
       <ReleaseNotification />
       <Capabilities />
